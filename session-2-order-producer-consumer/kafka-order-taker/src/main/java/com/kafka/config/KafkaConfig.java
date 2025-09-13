@@ -1,4 +1,4 @@
-package com.kafka.avro.config;
+package com.kafka.config;
 
 import java.util.Properties;
 

@@ -1,6 +1,6 @@
-package com.kafka.avro.producer;
+package com.kafka.producer;
 
-import com.kafka.avro.config.KafkaConfig;
+import com.kafka.config.KafkaConfig;
 
 import java.util.Random;
 

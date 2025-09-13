@@ -1,4 +1,4 @@
-package com.kafka.avro.config;
+package com.kafka.streams.config;
 
 import java.util.Properties;
 

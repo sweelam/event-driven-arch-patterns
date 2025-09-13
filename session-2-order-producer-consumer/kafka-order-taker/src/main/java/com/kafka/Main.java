@@ -1,6 +1,6 @@
-package com.kafka.avro;
+package com.kafka;
 
-import com.kafka.avro.producer.KProducer;
+import com.kafka.producer.KProducer;
 
 public class Main {
     public static void main(String[] args) {
