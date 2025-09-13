@@ -1,0 +1,23 @@
+{
+    "namespace": "example.avro",
+    "type": "record",
+    "name": "UserEmail",
+    "fields": [
+        { 
+            "name": "email",
+            "type": "string"
+        },
+        { 
+            "name": "title",
+            "type": "string"
+        },
+        { 
+            "name": "body",
+            "type": ["string", "null"]
+        },
+        { 
+            "name": "EventType",
+            "type": "string"
+        }
+    ]
+}
