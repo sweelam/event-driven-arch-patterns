@@ -9,7 +9,11 @@ import java.lang.Thread.sleep
 @Component
 class MedicineConsumer (val objectMapper: ObjectMapper) {
 
-    @KafkaListener(topics = ["medicine-topic"], groupId = "medicine-group")
+    @KafkaListener(
+        topics = ["medicine-topic"],
+        groupId = "medicine-group",
+        concurrency = "3"
+    )
     fun receiveMessage(value: MedicineEvent) {
         sleep(5000L)
         val jsonVal = objectMapper.writeValueAsString(value)
