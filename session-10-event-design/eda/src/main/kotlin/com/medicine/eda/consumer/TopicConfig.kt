@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class TopicConfig {
     @Bean
-    fun topic() =
-        NewTopic("medicine-topic", 3, 1)
+    fun topic() = NewTopic("medicine-topic", 3, 1)
 }
+

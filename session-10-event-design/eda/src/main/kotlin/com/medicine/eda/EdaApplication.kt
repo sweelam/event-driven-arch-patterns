@@ -7,27 +7,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.time.LocalDate
 
-
 @SpringBootApplication
-class EdaApplication (val medicineProducer: MedicineProducer)
-    : CommandLineRunner {
-
+class EdaApplication(
+    val medicineProducer: MedicineProducer,
+) : CommandLineRunner {
     val faker = Faker()
 
     override fun run(args: Array<String>) {
-
         for (i in 1..100) {
             medicineProducer.medicineUpdate(
                 medicineProducer.medicineUpdate(
                     faker.funnyName().name(),
                     faker.number().randomDouble(2, 10, 1000),
-                    LocalDate.now().plusYears(2))
+                    LocalDate.now().plusYears(2),
+                ),
             )
         }
-
     }
 }
 
 fun main(args: Array<String>) {
-	runApplication<EdaApplication>(*args)
+    runApplication<EdaApplication>(*args)
 }
