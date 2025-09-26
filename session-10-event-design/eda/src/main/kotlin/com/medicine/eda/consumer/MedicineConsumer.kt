@@ -3,16 +3,11 @@ package com.medicine.eda.consumer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.medicine.eda.producer.MedicineEvent
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicLong
-import kotlin.math.log
 
 @Component
 class MedicineConsumer (val objectMapper: ObjectMapper) {
