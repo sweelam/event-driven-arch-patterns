@@ -10,14 +10,16 @@ import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicInteger
 
 @Component
-class MedicineConsumer (val objectMapper: ObjectMapper) {
+class MedicineConsumer(
+    val objectMapper: ObjectMapper,
+) {
     private val logger = KotlinLogging.logger {}
     private val count = AtomicInteger()
 
     @KafkaListener(
         topics = ["medicine-topic"],
         groupId = "medicine-group",
-        concurrency = "3"
+        concurrency = "3",
     )
     fun receiveMessage(value: MedicineEvent) {
         if (count.get() == 0) {
@@ -37,7 +39,7 @@ class MedicineConsumer (val objectMapper: ObjectMapper) {
         topics = ["medicine-topic"],
         groupId = "medicine-group-2",
         concurrency = "3",
-        autoStartup = "false"       // to true to start listening
+        autoStartup = "false", // to true to start listening
     )
     fun listen(event: ConsumerRecord<String, MedicineEvent>) {
         sleep(5000L)
@@ -46,3 +48,4 @@ class MedicineConsumer (val objectMapper: ObjectMapper) {
         logger.info { "Received Message key in group medicine-group-2 in json format: $jsonVal" }
     }
 }
+
