@@ -23,7 +23,7 @@ public class RmqProducerWithDeadLetterExchange {
 		var exchangeName = EXCHANGE + "dlx";
 		var DEAD_LETTER_EXCHANGE = EXCHANGE + "_dead_letter";
 
-		var exchange = ExchangeBuilder.builder()
+		var deadLetterExchangeBuilder = ExchangeBuilder.builder()
 				.exchangeName(DEAD_LETTER_EXCHANGE)
 				.type(BuiltinExchangeType.FANOUT.name().toLowerCase());
 
@@ -34,19 +34,19 @@ public class RmqProducerWithDeadLetterExchange {
 		amqp.connect(USERNAME, PASSWORD, 5672);
 
 		amqp.createInfra(
-				exchange,
+				deadLetterExchangeBuilder,
 				queueName,
 				exchangeArgs,
 				ROUTING_K);
 
-		var mainExhange = ExchangeBuilder.builder()
+		var mainExchange = ExchangeBuilder.builder()
 				.exchangeName(exchangeName)
 				.type(BuiltinExchangeType.DIRECT.name().toLowerCase());
 
-		amqp.createInfra(mainExhange, queueName,
+		amqp.createInfra(mainExchange, queueName,
 				Map.of("x-dead-letter-exchange", DEAD_LETTER_EXCHANGE), ROUTING_K);
 
-		amqp.createInfra(mainExhange, queueName, null, ROUTING_K);
+		amqp.createInfra(mainExchange, queueName, null, ROUTING_K);
 		amqp.getChannel().queueBind(queueName, DEAD_LETTER_EXCHANGE, ROUTING_K);
 	}
 }
