@@ -8,3 +8,9 @@ func FailOnError(err error, msg string) error {
 	}
 	return nil
 }
+
+func PanicOnError(err error, msg string) {
+	if err != nil {
+		panic(fmt.Sprintf("%s: %s", msg, err.Error()))
+	}
+}

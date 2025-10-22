@@ -41,10 +41,10 @@ func (o *OrderProducer) PublishMessage(queueName string, body []byte) error {
 	defer cancel()
 
 	err := o.Ch.PublishWithContext(ctx,
-		"",        // exchange
-		queueName, // routing key
-		false,     // mandatory
-		false,     // immediate
+		"training-exchange", // exchange
+		queueName,           // routing key
+		false,               // mandatory
+		false,               // immediate
 		amqp.Publishing{
 			ContentType:  "json",
 			DeliveryMode: 2,

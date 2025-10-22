@@ -10,6 +10,10 @@ type RMQ struct {
 	Conn *amqp.Connection
 }
 
+func NewRmq() *RMQ {
+	return &RMQ{}
+}
+
 func (r *RMQ) Connect() error {
 	Conn, err := amqp.Dial("amqp://myuser:mypassword@localhost:5672/")
 
