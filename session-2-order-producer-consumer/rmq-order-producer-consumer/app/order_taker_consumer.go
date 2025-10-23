@@ -10,6 +10,11 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+const (
+	EXCHANGE_NAME = "training-exchange"
+	EXCHANGE_TYPE = "direct"
+)
+
 type OrderConsumer struct {
 	RMQ *middleware.RMQ
 	Ch  *amqp.Channel
@@ -28,12 +33,13 @@ func (oc *OrderConsumer) Consume(queueName string) {
 
 	// Declare the queue to ensure it exists
 	bm := middleware.NewBrokerManager(oc.Ch)
-	bm.DeclareQueueAndBind(queueName, "training-exchange", "direct")
+	bm.DeclareQueueAndBind(queueName, EXCHANGE_NAME, EXCHANGE_TYPE)
 
 	// Create a unique consumer tag
 	consumerTag := fmt.Sprintf("consumer-%d", time.Now().UnixNano())
-	mssgs, shouldReturn := consumeMessage(oc, queueName, consumerTag)
-	if shouldReturn {
+	mssgs, noMessageToDisplay := consumeMessage(oc, queueName, consumerTag)
+
+	if noMessageToDisplay {
 		return
 	}
 
