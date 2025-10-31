@@ -9,78 +9,50 @@ import java.util.concurrent.TimeoutException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 
+import static java.util.Objects.nonNull;
+
 public class AMQP {
 	private Connection conn;
 	private Channel channel;
 
-	public Connection connect(String username, String password, int port) throws IOException, TimeoutException {
-		ConnectionFactory connectionFactory = new ConnectionFactory();
-		connectionFactory.setUsername(username);
-		connectionFactory.setPassword(password);
-		connectionFactory.setPort(port);
+    private ConnectionFactory setupConnection(String username, String password, int port) {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        connectionFactory.setUsername(username);
+        connectionFactory.setPassword(password);
+        connectionFactory.setPort(port);
+        return connectionFactory;
+    }
 
-		conn = connectionFactory.newConnection();
-		return conn;
+	public Connection connect(String username, String password, int port)
+            throws IOException, TimeoutException {
+        var connectionFactory = setupConnection(username, password, port);
+        return conn = connectionFactory.newConnection();
 	}
 
-	public Channel getChannel() throws IOException, TimeoutException {
+    public Channel createChannel() throws IOException {
 		assert conn != null : "Connections is not initialized";
-
-		if (channel != null) {
-			return channel;
-		}
-
-		return channel = conn.createChannel();
+		return nonNull(channel) ? channel : conn.createChannel();
 	}
 
-	public boolean createInfra(String exchangeName, String exchangeType, String queueName,
-			String RK) throws IOException, TimeoutException {
-		
-		if (channel == null) {
-			getChannel();
+	public void createInfra(ExchangeBuilder exchange, String queueName,
+                               Map<String, Object> args, String RK) throws IOException {
+
+        if (channel == null) {
+			channel = createChannel();
 		}
 
-		try {
-			channel.exchangeDeclare(exchangeName, exchangeType);
-			channel.queueDeclare(queueName, true, false, false, null);
-			channel.queueBind(queueName, exchangeName, RK);
-		} catch (IOException e) {
-			return false;
-		}
+        channel.exchangeDeclare(
+                exchange.getExchangeName(),
+                exchange.getType(),
+                null != exchange.isDurable(),
+                null != exchange.isAutoDelete(),
+                exchange.getGetArguments());
 
-		return false;
+        channel.queueDeclare(queueName, true, false, false, args);
+        channel.queueBind(queueName, exchange.getExchangeName(), RK);
 	}
 
-	public boolean createInfra(ExchangeBuilder exchange, String queueName, Map<String, Object> args, String RK)
-			throws IOException, TimeoutException {
-		if (channel == null) {
-			getChannel();
-		}
-
-		try {
-
-			channel.exchangeDeclare(
-					exchange.getExchangeName(),
-					exchange.getType(),
-					null != exchange.isDurable(),
-					null != exchange.isAutoDelete(),
-					exchange.getGetArguments());
-
-			channel.queueDeclare(queueName, true, false, false, args);
-			channel.queueBind(queueName, exchange.getExchangeName(), RK);
-
-		} catch (IOException e) {
-			return false;
-		}
-
-		return false;
-	}
-
-	public void enableDeliveryAck() throws IOException, TimeoutException {
-		if (channel == null) {
-			getChannel();
-		}
-
+	public void enableDeliveryAck() throws IOException {
 		var selectOk = channel.confirmSelect();
 		if (selectOk == null) {
 			throw new RuntimeException("Auto Ack is not enabled");

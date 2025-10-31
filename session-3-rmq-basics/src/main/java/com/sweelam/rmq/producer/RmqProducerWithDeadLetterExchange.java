@@ -47,6 +47,6 @@ public class RmqProducerWithDeadLetterExchange {
 				Map.of("x-dead-letter-exchange", DEAD_LETTER_EXCHANGE), ROUTING_K);
 
 		amqp.createInfra(mainExchange, queueName, null, ROUTING_K);
-		amqp.getChannel().queueBind(queueName, DEAD_LETTER_EXCHANGE, ROUTING_K);
+		amqp.createChannel().queueBind(queueName, DEAD_LETTER_EXCHANGE, ROUTING_K);
 	}
 }
