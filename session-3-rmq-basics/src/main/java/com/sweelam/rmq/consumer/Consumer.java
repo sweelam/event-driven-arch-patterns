@@ -34,7 +34,7 @@ public class Consumer {
             System.out.println("============&&&&&&&&&&************================");
             System.out.println(tag);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

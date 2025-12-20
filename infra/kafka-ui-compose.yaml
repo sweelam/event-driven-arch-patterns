@@ -6,5 +6,17 @@ services:
       - 8080:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
-    # volumes:
-    #   - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+
+  redpanda-console:
+    container_name: redpanda-console
+    image: docker.redpanda.com/redpandadata/console:latest
+    ports:
+      - 8086:8080
+    environment:
+      KAFKA_BROKERS: broker:29092
+    networks:
+      - kafka-order-taker_default
+
+networks:
+  kafka-order-taker_default:
+    external: true

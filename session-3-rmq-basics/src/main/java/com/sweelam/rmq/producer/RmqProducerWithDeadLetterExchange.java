@@ -15,6 +15,9 @@ import static com.sweelam.rmq.config.AmqpConfig.*;
 
 
 public class RmqProducerWithDeadLetterExchange {
+	public static final String X_DEAD_LETTER_EXCHANGE = "x-dead-letter-exchange";
+	public static final String X_MESSAGE_TTL = "x-message-ttl";
+	public static final int TTL = 60000;
 	private static AMQP amqp = new AMQP();
 
 	public static void main(String[] args) throws IOException, TimeoutException {
@@ -28,8 +31,8 @@ public class RmqProducerWithDeadLetterExchange {
 				.type(BuiltinExchangeType.FANOUT.name().toLowerCase());
 
 		Map<String, Object> exchangeArgs = Map.of(
-				"x-dead-letter-exchange", DEAD_LETTER_EXCHANGE,
-				"x-message-ttl", 60000);
+				X_DEAD_LETTER_EXCHANGE, DEAD_LETTER_EXCHANGE,
+				X_MESSAGE_TTL, TTL);
 
 		amqp.connect(USERNAME, PASSWORD, 5672);
 
